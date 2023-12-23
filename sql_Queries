@@ -1,0 +1,87 @@
+use Company;
+--==================== 1 ===================================================
+select top 1 d.dname as [Departament nomi], avg(sal) as [Urtacha oylik]
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by d.dname
+order by avg(sal) desc;
+
+--==================== 2 ============================================================================
+select d.dname as[Department], count(e.deptno) as [Ishchilar soni], sum(sal) as [Umumiy ish haqi]
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by dname;
+
+--==================== 3 =============================================
+select *
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+where location IN ('DALLAS','CHICAGO');
+
+--==================== 4 =============================================
+select count(job)
+from emp
+where job in ('analyst','manager');
+--where job like 'analyst' or job like 'manager'; yoki bu
+
+--==================== 5 =============================================
+select d.dname as [Bo'lim],sum(sal) as [Oylik]
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by dname
+having sum(sal)>5000
+order by sum(sal);
+
+--==================== 6 =============================================
+select d.dname as [Bulim], avg(sal) as [Urtacha oylik]
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by dname
+having avg(sal) > (select avg(sal)
+				from emp e
+				inner join dept d
+				on e.deptno=d.deptno
+				where dname like 'Sales');
+
+--==================== 7 =============================================
+select *from emp
+select *from dept
+select e1.ename as [Xodim ismi]
+from emp e1
+where e1.sal > any (select avg(e2.sal)
+			from emp e2
+			group by e2.deptno
+			having e2.deptno=e1.deptno);
+
+--==================== 8 =============================================
+select min(sal) as [Oylik] , d.deptno
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by dname, d.deptno
+having min(sal)=1500;-- yuq ekan table da bunaqa oylik oladigan
+
+--==================== 9 =============================================
+select d.dname as [Bulim], avg(sal) as [Urtacha oylik]
+from emp e
+inner join dept d
+on e.deptno=d.deptno
+group by dname
+having avg(sal) > (select avg(sal)
+				from emp e
+				inner join dept d
+				on e.deptno=d.deptno
+				where dname = 'Sales');
+
+--==================== 10 =============================================
+select  e.ename [Xodimlar]
+from emp e
+where e.sal > any (select avg(e1.sal)
+			from emp e1
+			group by e1.deptno
+			having e1.deptno=e.deptno and count(sal)>5);
